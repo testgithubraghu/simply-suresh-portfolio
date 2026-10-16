@@ -1,0 +1,183 @@
+@import "tailwindcss";
+
+
+/* ==========================================================================
+   ONDO FINANCE DESIGN SYSTEM — TOKEN SOURCE OF TRUTH
+   Adapted (unmodified values) for the Simply Suresh entertainment brand.
+
+   Typography ....... Gellix (licensed, Displaay Type Foundry) — headings 700
+   Accent ........... #EE7B39   Secondary accent ... #5A86CC
+   Background ....... #FFFFFF   Primary text ....... #000000
+   Secondary text ... #626262   Border ............. #DEDEDE
+   Soft surface ..... #F0F0F0   Dark surface ....... #1D1D1D
+   Secondary dark ... #313131
+   Spacing .......... 8px base grid (all paddings/margins are multiples of 8)
+   Geometry ......... pill buttons, 16–24px rounded cards & imagery
+   Shadows .......... subtle, colour-tinted, never heavy
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   GELLIX
+   The licensed Gellix webfonts are not bundled with this repository.
+   Drop the licensed files into /public/fonts/gellix/ and extend each
+   @font-face `src` with e.g. url("/fonts/gellix/Gellix-Regular.woff2").
+   See public/fonts/gellix/README.md.
+
+   Until then these faces resolve through `local()` only — i.e. true Gellix
+   renders if (and only if) the visitor actually has it installed — and the
+   stack then falls through to the clearly documented interim typeface
+   "Manrope", loaded in app/layout.tsx via next/font/google. The fallback is
+   never labelled as Gellix.
+   -------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Gellix";
+  src: local("Gellix Regular"), local("Gellix-Regular");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gellix";
+  src: local("Gellix Medium"), local("Gellix-Medium");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gellix";
+  src: local("Gellix SemiBold"), local("Gellix-SemiBold");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Gellix";
+  src: local("Gellix Bold"), local("Gellix-Bold");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Type — Gellix first, Manrope (next/font) second.
+   `inline` is required because --font-manrope is set on <html> by next/font. */
+@theme inline {
+  --font-sans: "Gellix", var(--font-manrope), ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-heading: "Gellix", var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+}
+
+@theme {
+  /* Palette — exact Ondo values */
+  --color-accent: #ee7b39;
+  --color-accent-deep: #d3641f;
+  --color-accent-wash: #fdf1e8;
+  --color-sky: #5a86cc;
+  --color-sky-wash: #eef3fb;
+  --color-ink: #000000;
+  --color-graphite: #626262;
+  --color-line: #dedede;
+  --color-mist: #f0f0f0;
+  --color-night: #1d1d1d;
+  --color-charcoal: #313131;
+  --color-paper: #ffffff;
+
+  /* Geometry */
+  --radius-btn: 999px;
+  --radius-tile: 16px;
+  --radius-card: 24px;
+  --radius-frame: 32px;
+
+  /* Restrained, colour-tinted elevation */
+  --shadow-tint: 0 24px 48px -28px rgb(238 123 57 / 0.45);
+  --shadow-lift: 0 32px 64px -40px rgb(0 0 0 / 0.35);
+  --shadow-card: 0 2px 4px rgb(0 0 0 / 0.03), 0 24px 48px -32px rgb(0 0 0 / 0.18);
+  --shadow-inset-line: inset 0 0 0 1px rgb(0 0 0 / 0.06);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-feature-settings: "ss01" on, "cv01" on;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-heading);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  img {
+    user-select: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* 8px base-grid container */
+@utility container-site {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 78rem;
+  padding-inline: 24px;
+  @media (width >= 48rem) {
+    padding-inline: 32px;
+  }
+  @media (width >= 80rem) {
+    padding-inline: 48px;
+  }
+}
+
+/* Small-caps eyebrow used across the site */
+@utility eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+/* Editorial hairline rule */
+@utility hairline {
+  height: 1px;
+  width: 100%;
+  background: var(--color-line);
+}
