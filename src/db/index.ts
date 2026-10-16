@@ -1,24 +1,37 @@
-import { drizzle } from "drizzle-orm/node-postgres";
+import { drizzle, type NodePgDatabase } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
-const databaseUrl = process.env.DATABASE_URL;
-
-if (!databaseUrl) {
-  throw new Error("DATABASE_URL is required");
-}
-
 const globalForDb = globalThis as typeof globalThis & {
-  __arenaNextJsPostgresqlPool?: Pool;
+  __simplySureshPool?: Pool;
+  __simplySureshDb?: NodePgDatabase;
 };
 
-export const pool =
-  globalForDb.__arenaNextJsPostgresqlPool ??
-  new Pool({
-    connectionString: databaseUrl,
-  });
-
-if (process.env.NODE_ENV !== "production") {
-  globalForDb.__arenaNextJsPostgresqlPool = pool;
+export function getPool(): Pool {
+  if (!globalForDb.__simplySureshPool) {
+    const databaseUrl = process.env.DATABASE_URL;
+    if (!databaseUrl) {
+      throw new Error("DATABASE_URL is required");
+    }
+    globalForDb.__simplySureshPool = new Pool({
+      connectionString: databaseUrl,
+      max: 5,
+    });
+  }
+  return globalForDb.__simplySureshPool;
 }
 
-export const db = drizzle(pool);
+function getDb(): NodePgDatabase {
+  if (!globalForDb.__simplySureshDb) {
+    globalForDb.__simplySureshDb = drizzle(getPool());
+  }
+  return globalForDb.__simplySureshDb;
+}
+
+// Lazy proxy: nothing connects (or throws) until a query is actually made.
+export const db = new Proxy({} as NodePgDatabase, {
+  get(_target, prop) {
+    const real = getDb() as unknown as Record<string | symbol, unknown>;
+    const value = real[prop];
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+});
